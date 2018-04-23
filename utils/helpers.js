@@ -50,10 +50,10 @@ export function getMetricMetaInfo (metric) {
       getIcon() {
         return (
           <View>
-            <MaterialCommunityIcons
-              name='swim'
-              color={white}
-              size={35}
+              <MaterialCommunityIcons
+                  name='swim'
+                  color={white}
+                  size={35}
             />
           </View>
         )
