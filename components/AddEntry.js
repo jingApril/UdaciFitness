@@ -4,6 +4,8 @@ import { getMetricMetaInfo,timeToString } from '../utils/helpers'
 import UdacitySlider from './UdacitySlider'
 import UdacityStepper from './UdacityStepper'
 import DateHeader from './DateHeader'
+import { Ionicons } from '@expo/vector-icons'
+import TextButton from './TextButton'
 
 function SubmitBtn ({onPress}) {
 	return (
@@ -70,8 +72,34 @@ export default class AddEntry extends Component {
 
 	}
 
+	reset = () => {
+		const key = timeToString()
+
+		// update Redux
+
+		// Route to Home
+
+		// Update "DB"
+	}
+
   render() {
 	const metaInfo = getMetricMetaInfo()
+//this.props.alreadyLogged
+	if(true) {
+		return (
+			<View>
+				<Ionicons
+					name ='ios-happy-outline'
+					size = {100}
+				/>
+				<Text>you already logged your information for today</Text>
+				<TextButton onPress ={this.reset}>
+					reset
+				</TextButton>
+
+			</View>
+		)
+	}
     return (
       <View>
 		  <DateHeader date={(new Date()).toLocaleDateString()}/>
@@ -79,20 +107,19 @@ export default class AddEntry extends Component {
 		  {Object.keys(metaInfo).map((key) => {
 			  const { getIcon, type, ...rest } = metaInfo[key]
 			  const value = this.state[key]
-
 			  return (
 				  <View key= {key}>
 					  {getIcon()}
-					  {  type === 'steppers'
-						  ? <UdacityStepper
+					  {  type === 'slider'
+						  ?<UdacitySlider
+							  value = {value}
+							  onChange ={(value) => this.slide(key,value)}
+							  {...rest}
+						   />
+						  : <UdacityStepper
 							  value = {value}
 							  onIncrement = {() => this.increment(key)}
 							  onDecrement = {() => this.decrement(key)}
-							  {...rest}
-							/>
-						  : <UdacitySlider
-							  value = {value}
-							  onChange ={(value) => this.slide(key,value)}
 							  {...rest}
 							/> }
 				  </View>
