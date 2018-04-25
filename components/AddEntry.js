@@ -19,7 +19,7 @@ function SubmitBtn({ onPress }) {
     <TouchableOpacity onPress={onPress}>
       <Text>SUBMIT</Text>
     </TouchableOpacity>
-  );
+  )
 }
 
 class AddEntry extends Component {
