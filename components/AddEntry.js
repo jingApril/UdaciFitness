@@ -1,132 +1,154 @@
-import React, { Component } from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
-import { getMetricMetaInfo,timeToString } from '../utils/helpers'
-import UdacitySlider from './UdacitySlider'
-import UdacityStepper from './UdacityStepper'
-import DateHeader from './DateHeader'
-import { Ionicons } from '@expo/vector-icons'
-import TextButton from './TextButton'
+import React, { Component } from "react";
+import { View, TouchableOpacity, Text } from "react-native";
+import {
+  getMetricMetaInfo,
+  timeToString,
+  getDailyReminderValue
+} from "../utils/helpers";
+import UdacitySlider from "./UdacitySlider";
+import UdacityStepper from "./UdacityStepper";
+import DateHeader from "./DateHeader";
+import { Ionicons } from '@expo/vector-icons';
+import TextButton from "./TextButton";
+import { submitEntry, removeEntry } from "../utils/api";
+import { connect } from "react-redux";
+import { addEntry } from "../actions";
 
-function SubmitBtn ({onPress}) {
-	return (
-		<TouchableOpacity onPress={onPress}>
-			<Text>SUBMIT</Text>
-		</TouchableOpacity>
-	)
+function SubmitBtn({ onPress }) {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>SUBMIT</Text>
+    </TouchableOpacity>
+  );
 }
 
-export default class AddEntry extends Component {
+class AddEntry extends Component {
+  state = {
+    run: 0,
+    bike: 0,
+    swim: 0,
+    sleep: 0,
+    eat: 0
+  };
+  increment = metric => {
+    const { max, step } = getMetricMetaInfo(metric);
 
-	state ={
-		run: 0,
-		bike: 0,
-		swim: 0,
-		sleep: 0,
-		eat: 0,
-	}
-	increment = (metric) => {
-		const { max, step} = getMetricMetaInfo(metric)
+    this.setState(state => {
+      const count = state[metric] + step;
+      return {
+        ...state,
+        [metric]: count > max ? max : count
+      };
+    });
+  };
 
-		this.setState((state) => {
-			const count = state[metric] + step
-			return {
-				...state,
-				[metric]: count > max ? max : count,
-			}
-		})
-	}
-	decrement = (metric) => {
-		this.setState ((state) => {
-			const count = state[metric] -getMetricMetaInfo(metric).step
-			return {
-				...state,
-				[metric]: count < 0 ? 0: count,
-			}
-		})
-	}
+  decrement = metric => {
+    this.setState(state => {
+      const count = state[metric] - getMetricMetaInfo(metric).step;
+      return {
+        ...state,
+        [metric]: count < 0 ? 0 : count
+      };
+    });
+  };
 
+  slide = (metric, value) => {
+    this.setState(() => ({
+      [metric]: value
+    }));
+  };
 
-	slide = (metric, value) => {
-		this.setState(() => ({
-			[metric]: value
-		}))
-	}
+  submit = () => {
+    const key = timeToString();
+    const entry = this.state;
 
-	submit = () => {
-		const key = timeToString()
-		const entry = this.state
+    // update Redux
+    this.props.dispatch(
+      addEntry({
+        [key]: entry
+      })
+    );
 
-		// update Redux
-		this.setState(() => ({
-			run: 0,
-			bike: 0,
-			swim: 0,
-			sleep: 0,
-			eat: 0,
-		}))
-		// Navigate to Home
+    this.setState(() => ({
+      run: 0,
+      bike: 0,
+      swim: 0,
+      sleep: 0,
+      eat: 0
+    }));
+    // Navigate to Home
 
-		// save  to  "DB"
+    // save  to  "DB"
+    submitEntry({ key, entry });
+    // clearn local notification
+  };
 
-		// clearn local notification
+  reset = () => {
+    const key = timeToString();
 
-	}
+    // update Redux
+    this.props.dispatch(
+      addEntry({
+        [key]: getDailyReminderValue()
+      })
+    );
+    // Route to Home
 
-	reset = () => {
-		const key = timeToString()
-
-		// update Redux
-
-		// Route to Home
-
-		// Update "DB"
-	}
+    // Update "DB"
+    removeEntry(key);
+  };
 
   render() {
-	const metaInfo = getMetricMetaInfo()
-//this.props.alreadyLogged
-	if(true) {
-		return (
-			<View>
-				<Ionicons
-					name ='ios-happy-outline'
-					size = {100}
-				/>
-				<Text>you already logged your information for today</Text>
-				<TextButton onPress ={this.reset}>
-					reset
-				</TextButton>
-
-			</View>
-		)
-	}
+    const metaInfo = getMetricMetaInfo();
+    // this.props.alreadyLogged
+    if (this.props.alreadyLogged) {
+      return (
+        <View>
+          <Ionicons name="ios-happy-outline" size={100} />
+          <Text>you already logged your information for today</Text>
+          <TextButton onPress={this.reset}>reset</TextButton>
+        </View>
+      );
+    }
     return (
       <View>
-		  <DateHeader date={(new Date()).toLocaleDateString()}/>
-		  {/* <Text>{JSON.stringify(this.state)}</Text> */}
-		  {Object.keys(metaInfo).map((key) => {
-			  const { getIcon, type, ...rest } = metaInfo[key]
-			  const value = this.state[key]
-			  return (
-				  <View key= {key}>
-					  {getIcon()}
-					  {  type === 'slider'
-						  ?<UdacitySlider
-							  value = {value}
-							  onChange ={(value) => this.slide(key,value)}
-							  {...rest}
-						   />
-						  : <UdacityStepper
-							  value = {value}
-							  onIncrement = {() => this.increment(key)}
-							  onDecrement = {() => this.decrement(key)}
-							  {...rest}
-							/> }
-				  </View>
-			  )
-		  })}
-		  <SubmitBtn  onPress={this.submit}/>
+        <DateHeader date={new Date().toLocaleDateString()} />
+
+        {Object.keys(metaInfo).map(key => {
+          const { getIcon, type, ...rest } = metaInfo[key];
+          const value = this.state[key];
+          return (
+            <View key={key}>
+              {getIcon()}
+              {type === "slider" ? (
+                <UdacitySlider
+                  value={value}
+                  onChange={value => this.slide(key, value)}
+                  {...rest}
+                />
+              ) : (
+                <UdacityStepper
+                  value={value}
+                  onIncrement={() => this.increment(key)}
+                  onDecrement={() => this.decrement(key)}
+                  {...rest}
+                />
+              )}
+            </View>
+          );
+        })}
+        <SubmitBtn onPress={this.submit} />
       </View>
-    )
+    );
   }
 }
+
+function mapStateToProps(state) {
+  const key = timeToString();
+
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === "underfined"
+  };
+}
+
+export default connect(mapStateToProps)(AddEntry);

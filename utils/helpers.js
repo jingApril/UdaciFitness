@@ -3,6 +3,15 @@ import { View } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { white } from './colors'
 
+
+
+export function getDailyReminderValue(){
+    return {
+        today:"Dont forget to log your data today!"
+    }
+}
+
+
 export function getMetricMetaInfo (metric) {
   const info = {
     run: {
@@ -136,6 +145,7 @@ export function calculateDirection (heading) {
 
   return direction
 }
+
 
 export function timeToString (time = Date.now()) {
   const date = new Date(time)
