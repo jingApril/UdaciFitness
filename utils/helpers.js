@@ -3,8 +3,6 @@ import { View } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { white } from './colors'
 
-
-
 export function getDailyReminderValue(){
     return {
         today:"Dont forget to log your data today!"
@@ -41,11 +39,11 @@ export function getMetricMetaInfo (metric) {
       getIcon() {
         return (
           <View>
-            <MaterialCommunityIcons
-              name='bike'
-              color={white}
-              size={32}
-            />
+              <MaterialIcons
+                  name='directions-bike'
+                  color={white}
+                  size={32}
+              />
           </View>
         )
       }
@@ -77,11 +75,11 @@ export function getMetricMetaInfo (metric) {
       getIcon() {
         return (
           <View>
-            <FontAwesome
-              name='bed'
-              color={white}
-              size={30}
-            />
+              <FontAwesome
+                  name='bed'
+                  color={white}
+                  size={30}
+              />
           </View>
         )
       }
@@ -95,11 +93,11 @@ export function getMetricMetaInfo (metric) {
       getIcon() {
         return (
           <View>
-            <MaterialCommunityIcons
-              name='food'
-              color={white}
-              size={35}
-            />
+              <MaterialCommunityIcons
+                  name='food'
+                  color={white}
+                  size={35}
+              />
           </View>
         )
       }

@@ -30,10 +30,10 @@ class AddEntry extends Component {
     sleep: 0,
     eat: 0
   };
-  increment = metric => {
+  increment = (metric) => {
     const { max, step } = getMetricMetaInfo(metric);
 
-    this.setState(state => {
+    this.setState((state) => {
       const count = state[metric] + step;
       return {
         ...state,
@@ -42,8 +42,8 @@ class AddEntry extends Component {
     });
   };
 
-  decrement = metric => {
-    this.setState(state => {
+  decrement = (metric) => {
+    this.setState((state) => {
       const count = state[metric] - getMetricMetaInfo(metric).step;
       return {
         ...state,
@@ -104,40 +104,40 @@ class AddEntry extends Component {
     if (this.props.alreadyLogged) {
       return (
         <View>
-          <Ionicons name="ios-happy-outline" size={100} />
-          <Text>you already logged your information for today</Text>
-          <TextButton onPress={this.reset}>reset</TextButton>
+            <Ionicons name={'ios-happy-outline'} size={100} />
+            <Text>you already logged your information for today</Text>
+            <TextButton onPress={this.reset}>reset</TextButton>
         </View>
       );
     }
     return (
       <View>
-        <DateHeader date={new Date().toLocaleDateString()} />
+          <DateHeader date={new Date().toLocaleDateString()} />
 
-        {Object.keys(metaInfo).map(key => {
-          const { getIcon, type, ...rest } = metaInfo[key];
-          const value = this.state[key];
-          return (
-            <View key={key}>
-              {getIcon()}
-              {type === "slider" ? (
-                <UdacitySlider
-                  value={value}
-                  onChange={value => this.slide(key, value)}
-                  {...rest}
-                />
-              ) : (
-                <UdacityStepper
-                  value={value}
-                  onIncrement={() => this.increment(key)}
-                  onDecrement={() => this.decrement(key)}
-                  {...rest}
-                />
-              )}
-            </View>
-          );
-        })}
-        <SubmitBtn onPress={this.submit} />
+          {Object.keys(metaInfo).map(key => {
+              const { getIcon, type, ...rest } = metaInfo[key];
+              const value = this.state[key];
+              return (
+                  <View key={key}>
+                      {getIcon()}
+                      {type === "slider" ? (
+                          <UdacitySlider
+                              value={value}
+                              onChange={value => this.slide(key, value)}
+                              {...rest}
+                          />
+                      ) : (
+                          <UdacityStepper
+                              value={value}
+                              onIncrement={() => this.increment(key)}
+                              onDecrement={() => this.decrement(key)}
+                              {...rest}
+                          />
+                      )}
+                  </View>
+              );
+          })}
+          <SubmitBtn onPress={this.submit} />
       </View>
     );
   }
@@ -147,7 +147,7 @@ function mapStateToProps(state) {
   const key = timeToString();
 
   return {
-    alreadyLogged: state[key] && typeof state[key].today === "underfined"
+    alreadyLogged: state[key] && typeof state[key].today === "undefined"
   };
 }
 
