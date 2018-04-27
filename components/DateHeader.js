@@ -1,10 +1,17 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text,StyleSheet } from 'react-native'
+import { white, purple, black} from "../utils/colors"
 
 export default function DateHeader ({ date }) {
 	return (
-		<Text>
+		<Text style={styles.date}>
 			{date}
 		</Text>
 	)
 }
+const styles = StyleSheet.create({
+	date: {
+		color: 'purple',
+		fontSize: 20
+	}
+})
