@@ -3,11 +3,6 @@ import { View, StyleSheet } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { white,red, orange, blue, lightPurp, pink } from './colors'
 
-export function getDailyReminderValue(){
-    return {
-        today:"Dont forget to log your data today!"
-    }
-}
 
 const styles = StyleSheet.create({
     iconContainer: {
@@ -20,6 +15,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
     }
 })
+
 export function getMetricMetaInfo (metric) {
   const info = {
     run: {
@@ -125,6 +121,14 @@ export function isBetween (num, x, y) {
 
   return false
 }
+
+
+export function getDailyReminderValue(){
+    return {
+        today:"Dont forget to log your data today!"
+    }
+}
+
 
 export function calculateDirection (heading) {
   let direction = ''
