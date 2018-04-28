@@ -19,7 +19,7 @@ function SubmitBtn({ onPress }) {
   return (
     <TouchableOpacity
         onPress={onPress}
-        style={Platform.OS === "ios" ? styles.iosSubmitBtn : styles.androidSubmitBtn}
+        style={Platform.OS === "ios" ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
     >
         <Text style={styles.submitBtnText}>SUBMIT</Text>
     </TouchableOpacity>
@@ -32,7 +32,7 @@ class AddEntry extends Component {
     bike: 0,
     swim: 0,
     sleep: 0,
-    eat: 0
+    eat: 0,
   };
   increment = (metric) => {
     const { max, step } = getMetricMetaInfo(metric);
@@ -67,11 +67,9 @@ class AddEntry extends Component {
     const entry = this.state;
 
     // update Redux
-    this.props.dispatch(
-      addEntry({
+    this.props.dispatch(addEntry({
         [key]: entry
-      })
-    );
+      }));
 
     this.setState(() => ({
       run: 0,
@@ -91,11 +89,9 @@ class AddEntry extends Component {
     const key = timeToString();
 
     // update Redux
-    this.props.dispatch(
-      addEntry({
+    this.props.dispatch(addEntry({
         [key]: getDailyReminderValue()
-      })
-    );
+      }));
     // Route to Home
 
     // Update "DB"
@@ -118,26 +114,24 @@ class AddEntry extends Component {
       <View style={styles.container}>
           <DateHeader date={new Date().toLocaleDateString()} />
 
-          {Object.keys(metaInfo).map(key => {
+          {Object.keys(metaInfo).map((key) => {
               const { getIcon, type, ...rest } = metaInfo[key];
               const value = this.state[key];
               return (
-                  <View  style={styles.row} key={key}>
+                  <View key={key} style={styles.row} >
                       {getIcon()}
-                      {type === "slider" ? (
-                          <UdacitySlider
+                      {type === "slider"
+                          ? <UdacitySlider
                               value={value}
-                              onChange={value => this.slide(key, value)}
+                              onChange={(value) => this.slide(key, value)}
                               {...rest}
-                          />
-                      ) : (
-                          <UdacityStepper
+                            />
+                          :  <UdacityStepper
                               value={value}
                               onIncrement={() => this.increment(key)}
                               onDecrement={() => this.decrement(key)}
                               {...rest}
-                          />
-                      )}
+                             />}
                   </View>
               );
           })}
@@ -166,7 +160,7 @@ const styles = StyleSheet.create({
         marginLeft: 40,
         marginRight: 40,
     },
-    androidSubmitBtn:{
+    AndroidSubmitBtn:{
         backgroundColor: purple,
         padding: 10,
         borderRadius: 2,

@@ -8,7 +8,6 @@ export default function UdacitySlider({ max, unit, step, value, onChange }) {
 			<Slider
 				style={{flex: 1}}
 				step = {step}
-
 				value ={value}
 				maximumValue ={max}
 				minmumValue ={0}
